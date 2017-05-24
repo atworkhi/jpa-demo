@@ -144,11 +144,7 @@ public class SmsDownController {
                 Object obj = method.invoke(smsDown);
                 String value = "";
                 if (obj != null) {
-                    if (obj instanceof Integer) {
-                        value = String.valueOf((Integer) obj);
-                    } else if (obj instanceof String) {
-                        value = String.valueOf(obj);
-                    }
+                    value = obj.toString();
                 }
                 sb.append(value + ",");
             }
