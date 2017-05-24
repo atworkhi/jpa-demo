@@ -16,6 +16,4 @@ public class SmsDownServiceImpl extends BaseServiceImpl<SmsDown, Integer> implem
     private SmsDownDao smsDownDao;
 
 
-
-
 }

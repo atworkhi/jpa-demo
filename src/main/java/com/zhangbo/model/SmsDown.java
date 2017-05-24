@@ -4,6 +4,7 @@ package com.zhangbo.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -12,6 +13,10 @@ import java.io.Serializable;
 @Entity
 @Table(name = "sms_down")
 public class SmsDown implements Serializable {
+
+    @Transient
+    public static final String[] EXPORT_HEADERS = {"", "", "", "", "", "", "", "", ""};
+
     @Id
     private Integer id;
 
@@ -36,6 +41,22 @@ public class SmsDown implements Serializable {
     private String platform;
 
     private String description;
+
+
+    public String[] getfieldValues() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getId() + ",");
+        sb.append(this.getCategory() + ",");
+        sb.append(this.getDescription() + ",");
+        sb.append(this.getDownloadForm() + ",");
+        sb.append(this.getDownloadIp() + ",");
+        sb.append(this.getDownloadUrl() + ",");
+        sb.append(this.getInTime() + ",");
+        sb.append(this.getMalewareName() + ",");
+        sb.append(this.getMd5() + ",");
+        sb.append(this.getOldDownload());
+        return sb.toString().split(",");
+    }
 
 
     @Override
