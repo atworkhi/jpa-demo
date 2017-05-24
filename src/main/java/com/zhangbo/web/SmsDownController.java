@@ -70,7 +70,7 @@ public class SmsDownController {
         response.setContentType("multipart/form-data");
         response.addHeader("Content-Disposition", "attachment;fileName=" + System.currentTimeMillis() + ".csv");
         try (ServletOutputStream outputStream = response.getOutputStream()) {
-            List<SmsDown> smsDownList = smsDownService.findAll(Arrays.asList(idArr));
+            List<SmsDown> smsDownList = smsDownService.findAll();
             List<String[]> strList = parseSmsDown2Csv(smsDownList);
             CsvUtils.writeCSV(SmsDown.EXPORT_HEADERS, strList, outputStream);
         } catch (Exception e) {
@@ -138,7 +138,7 @@ public class SmsDownController {
         for (SmsDown smsDown : smsDownList) {
             StringBuilder sb = new StringBuilder();
             Class clazz = smsDown.getClass();
-            for (String field : smsDown.EXPORT_HEADERS_FIELDS) {
+            for (String field : SmsDown.EXPORT_HEADERS_FIELDS) {
                 String getMethod = "get" + field.substring(0, 1).toUpperCase() + field.substring(1);
                 Method method = clazz.getDeclaredMethod(getMethod);
                 Object obj = method.invoke(smsDown);
@@ -152,7 +152,7 @@ public class SmsDownController {
                 }
                 sb.append(value + ",");
             }
-            sb.replace(0, sb.length() - 1, "\n");
+            sb.deleteCharAt(sb.length() - 1);
             resultList.add(sb.toString().split(","));
         }
         return resultList;
@@ -175,7 +175,7 @@ public class SmsDownController {
                 }
                 SmsDown smsDown = new SmsDown();
                 Class clazz = smsDown.getClass();
-                for (int i = 0; i < fields.length; i++) {
+                for (int i = 1; i < fields.length; i++) {
                     Field field = clazz.getDeclaredField(fields[i]);
                     field.setAccessible(true);
                     String type = field.getType().toString();
@@ -189,7 +189,6 @@ public class SmsDownController {
                 }
                 smsDownList.add(smsDown);
             }
-            return smsDownList;
         }
         return smsDownList;
     }
