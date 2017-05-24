@@ -14,8 +14,23 @@ import java.io.Serializable;
 @Table(name = "sms_down")
 public class SmsDown implements Serializable {
 
+    /**
+     * 导出csv表头
+     */
     @Transient
-    public static final String[] EXPORT_HEADERS = {"", "", "", "", "", "", "", "", ""};
+    public static final String[] EXPORT_HEADERS = {
+            "id", "inTime", "md5", "malewareName", "downloadUrl",
+            "downloadIp", "downloadLocal", "downloadForm", "oldDownload",
+            "category", "platform", "description"};
+
+    /**
+     * 导出csv表头对应的字段名
+     */
+    @Transient
+    public static final String[] EXPORT_HEADERS_FIELDS = {
+            "id", "inTime", "md5", "malewareName", "downloadUrl",
+            "downloadIp", "downloadLocal", "downloadForm", "oldDownload",
+            "category", "platform", "description"};
 
     @Id
     private Integer id;
@@ -41,22 +56,6 @@ public class SmsDown implements Serializable {
     private String platform;
 
     private String description;
-
-
-    public String[] getfieldValues() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.getId() + ",");
-        sb.append(this.getCategory() + ",");
-        sb.append(this.getDescription() + ",");
-        sb.append(this.getDownloadForm() + ",");
-        sb.append(this.getDownloadIp() + ",");
-        sb.append(this.getDownloadUrl() + ",");
-        sb.append(this.getInTime() + ",");
-        sb.append(this.getMalewareName() + ",");
-        sb.append(this.getMd5() + ",");
-        sb.append(this.getOldDownload());
-        return sb.toString().split(",");
-    }
 
 
     @Override

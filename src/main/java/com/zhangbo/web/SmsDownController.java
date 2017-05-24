@@ -17,10 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,12 +70,8 @@ public class SmsDownController {
         response.setContentType("multipart/form-data");
         response.addHeader("Content-Disposition", "attachment;fileName=" + System.currentTimeMillis() + ".csv");
         try (ServletOutputStream outputStream = response.getOutputStream()) {
-            List<Integer> idList = Arrays.asList(idArr);
-            List<SmsDown> smsDownList = smsDownService.findAll(idList);
-            List<String[]> strList = new ArrayList<>();
-            for (SmsDown smsDown : smsDownList) {
-                strList.add(smsDown.getfieldValues());
-            }
+            List<SmsDown> smsDownList = smsDownService.findAll(Arrays.asList(idArr));
+            List<String[]> strList = parseSmsDown2Csv(smsDownList);
             CsvUtils.writeCSV(SmsDown.EXPORT_HEADERS, strList, outputStream);
         } catch (Exception e) {
             logger.error("导出smsdown异常", e);
@@ -94,8 +96,103 @@ public class SmsDownController {
         return resultInfo;
     }
 
+
+    @RequestMapping(value = "import", method = RequestMethod.POST)
+    public ResultInfo csvImport(MultipartFile uploadFile) {
+        ResultInfo resultInfo = new ResultInfo();
+        try (InputStream inputStream = uploadFile.getInputStream()) {
+            List<String[]> list = CsvUtils.readCSV(inputStream);
+            if (list != null) {
+                List<SmsDown> smsDownList = parseCsv2SmsDown(list);
+                smsDownService.save(smsDownList);
+                resultInfo.setSuccess(Boolean.TRUE);
+                resultInfo.setMessage("导入成功");
+            }
+        } catch (Exception e) {
+            resultInfo.setSuccess(Boolean.FALSE);
+            resultInfo.setMessage("导入失败");
+            logger.error("导入smsdown失败", e);
+        }
+        return resultInfo;
+    }
+
+
     @RequestMapping("/index")
     public String index() {
         return "smsdown/list2";
     }
+
+
+    /**
+     * 将smsdown转换为csv
+     *
+     * @param smsDownList
+     * @return
+     * @throws Exception
+     */
+    private static List<String[]> parseSmsDown2Csv(List<SmsDown> smsDownList) throws Exception {
+        List<String[]> resultList = new ArrayList<>();
+        if (smsDownList == null) {
+            return resultList;
+        }
+        for (SmsDown smsDown : smsDownList) {
+            StringBuilder sb = new StringBuilder();
+            Class clazz = smsDown.getClass();
+            for (String field : smsDown.EXPORT_HEADERS_FIELDS) {
+                String getMethod = "get" + field.substring(0, 1).toUpperCase() + field.substring(1);
+                Method method = clazz.getDeclaredMethod(getMethod);
+                Object obj = method.invoke(smsDown);
+                String value = "";
+                if (obj != null) {
+                    if (obj instanceof Integer) {
+                        value = String.valueOf((Integer) obj);
+                    } else if (obj instanceof String) {
+                        value = String.valueOf(obj);
+                    }
+                }
+                sb.append(value + ",");
+            }
+            sb.replace(0, sb.length() - 1, "\n");
+            resultList.add(sb.toString().split(","));
+        }
+        return resultList;
+    }
+
+
+    /**
+     * 将csv转换为smsdown
+     *
+     * @param list
+     * @return
+     */
+    private static List<SmsDown> parseCsv2SmsDown(List<String[]> list) throws Exception {
+        List<SmsDown> smsDownList = new ArrayList<>();
+        String[] fields = SmsDown.EXPORT_HEADERS_FIELDS;
+        if (list == null && list.size() == 0) {
+            for (String[] line : list) {
+                if (line == null || line.length == 0) {
+                    continue;
+                }
+                SmsDown smsDown = new SmsDown();
+                Class clazz = smsDown.getClass();
+                for (int i = 0; i < fields.length; i++) {
+                    Field field = clazz.getDeclaredField(fields[i]);
+                    field.setAccessible(true);
+                    String type = field.getType().toString();
+                    if (line[i] != null && line[i] != "") {
+                        if (type.endsWith("String")) {
+                            field.set(smsDown, String.valueOf(line[i]));
+                        } else if (type.endsWith("Integer")) {
+                            field.set(smsDown, Integer.parseInt(String.valueOf(line[i])));
+                        }
+                    }
+                }
+                smsDownList.add(smsDown);
+            }
+            return smsDownList;
+        }
+        return smsDownList;
+    }
+
+
 }
