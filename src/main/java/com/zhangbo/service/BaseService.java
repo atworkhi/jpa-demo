@@ -33,4 +33,6 @@ public interface BaseService<T, ID extends Serializable> {
 
     List<T> findAll(Iterable<ID> ids) throws Exception;
 
+    public <S extends T> List<S> findAll(Example<S> example) throws Exception;
+
 }

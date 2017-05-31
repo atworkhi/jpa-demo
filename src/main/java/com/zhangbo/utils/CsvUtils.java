@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -21,10 +22,11 @@ public class CsvUtils {
      */
     public static List<String[]> readCSV(InputStream in) throws Exception {
         if (in == null) {
-            return null;
+            return new ArrayList<String[]>();
         }
         List<String[]> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            reader.readLine();
             String str;
             while ((str = reader.readLine()) != null) {
                 result.add(str.split(","));
@@ -43,14 +45,16 @@ public class CsvUtils {
      * @param outputStream
      * @throws Exception
      */
-    public static void writeCSV(String[] header,List<String[]> strArrlist, OutputStream outputStream) throws Exception {
+    public static void writeCSV(String[] header, List<String[]> strArrlist, OutputStream outputStream) throws Exception {
         if (outputStream == null) {
             throw new NullPointerException();
         }
         if (strArrlist == null) {
-            return;
+            strArrlist = new ArrayList();
         }
+        strArrlist.add(0, header);
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
+
             StringBuilder strBuilder = new StringBuilder();
             for (String[] line : strArrlist) {
                 if (line == null || line.length == 0) {
@@ -70,5 +74,4 @@ public class CsvUtils {
             throw new Exception("写入cvs异常", e);
         }
     }
-
 }

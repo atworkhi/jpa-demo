@@ -65,4 +65,9 @@ public class BaseServiceImpl<T, ID extends Serializable> implements BaseService<
     public List<T> findAll(Iterable<ID> ids) throws Exception {
         return baseRepository.findAll(ids);
     }
+
+    @Override
+    public <S extends T> List<S> findAll(Example<S> example) throws Exception {
+        return baseRepository.findAll(example);
+    }
 }

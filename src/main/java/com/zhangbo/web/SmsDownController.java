@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,41 +48,28 @@ public class SmsDownController {
     @RequestMapping(value = "list", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public BSTableEntity<SmsDown> list(
-            @RequestParam(value = "order", defaultValue = "", required = false) String order,
-            @RequestParam(value = "other", defaultValue = "", required = false) String other,
-            @RequestParam("limit") int limit, @RequestParam("offset") int offset) {
-        BSTableEntity<SmsDown> entity = new BSTableEntity<SmsDown>();
+            @RequestParam(value = "inTime", defaultValue = "", required = false) String inTime,
+            @RequestParam(value = "md5", defaultValue = "", required = false) String md5,
+            @RequestParam("limit") int limit,
+            @RequestParam("offset") int offset) {
+        BSTableEntity<SmsDown> entity = new BSTableEntity<>();
         Pageable pageable = new PageRequest(offset / limit, limit);
-        Example<SmsDown> example = Example.of(null);
+        SmsDown smsDown = new SmsDown().setInTime(inTime).setMd5(md5);
+        Example<SmsDown> example = Example.of(smsDown);
         try {
-            Page<SmsDown> page = smsDownService.findAll(example, pageable);
-            entity.setRows(page.getContent());
-            entity.setTotal(page.getTotalElements());
+//            Page<SmsDown> page = smsDownService.findAll(example);
+            List<SmsDown> smsDownList = smsDownService.findAll();
+            entity.setRows(smsDownList);
+            entity.setTotal(Long.valueOf(smsDownList.size()));
         } catch (Exception e) {
             logger.error("查询SmsDown列表异常", e);
         }
         return entity;
     }
 
-    @RequestMapping(value = "export", method = RequestMethod.GET)
-    public void export(@RequestParam(value = "id", required = false) Integer[] idArr,
-                       HttpServletResponse response) {
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("multipart/form-data");
-        response.addHeader("Content-Disposition", "attachment;fileName=" + System.currentTimeMillis() + ".csv");
-        try (ServletOutputStream outputStream = response.getOutputStream()) {
-            List<SmsDown> smsDownList = smsDownService.findAll();
-            List<String[]> strList = parseSmsDown2Csv(smsDownList);
-            CsvUtils.writeCSV(SmsDown.EXPORT_HEADERS, strList, outputStream);
-        } catch (Exception e) {
-            logger.error("导出smsdown异常", e);
-        }
-    }
-
-
     @RequestMapping(value = "delete", method = RequestMethod.GET)
     @ResponseBody
-    public ResultInfo delete(@RequestParam(value = "id", required = true) Integer[] id) {
+    public ResultInfo delete(@RequestParam(value = "id",required = true) Integer[] id) {
         ResultInfo resultInfo = new ResultInfo();
         try {
             List<SmsDown> smsDownList = smsDownService.findAll(Arrays.asList(id));
@@ -94,6 +82,22 @@ public class SmsDownController {
             logger.error("删除smsdown失败");
         }
         return resultInfo;
+    }
+
+
+    @RequestMapping(value = "export", method = RequestMethod.GET)
+    public void export(@RequestParam(value = "id", required = true) Integer[] idArr,
+                       HttpServletResponse response) {
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        response.addHeader("Content-Disposition", "attachment;fileName=" + System.currentTimeMillis() + ".csv");
+        try (ServletOutputStream outputStream = response.getOutputStream()) {
+            List<SmsDown> smsDownList = smsDownService.findAll(Arrays.asList(idArr));
+            List<String[]> strList = parseSmsDown2Csv(smsDownList);
+            CsvUtils.writeCSV(SmsDown.EXPORT_HEADERS, strList, outputStream);
+        } catch (Exception e) {
+            logger.error("导出smsdown异常", e);
+        }
     }
 
 
@@ -119,7 +123,7 @@ public class SmsDownController {
 
     @RequestMapping("/index")
     public String index() {
-        return "smsdown/list2";
+        return "smsdown/list";
     }
 
 

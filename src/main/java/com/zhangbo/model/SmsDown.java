@@ -19,9 +19,9 @@ public class SmsDown implements Serializable {
      */
     @Transient
     public static final String[] EXPORT_HEADERS = {
-            "id", "inTime", "md5", "malewareName", "downloadUrl",
-            "downloadIp", "downloadLocal", "downloadForm", "oldDownload",
-            "category", "platform", "description"};
+            "id", "研判时间", "病毒md5", "病毒名称", "病毒真实下载地址",
+            "病毒真实下载IP", "病毒真实下载归属地", "病毒真实下载运营商", "病毒原始下载地址",
+            "病毒属性", "影响平台", "备注"};
 
     /**
      * 导出csv表头对应的字段名
