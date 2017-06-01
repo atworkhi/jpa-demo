@@ -21,10 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -67,7 +66,7 @@ public class SmsDownController {
         return smsDownList;
     }
 
-    @RequestMapping(value = "delete", method = RequestMethod.GET)
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo delete(@RequestParam(value = "id", required = true) Integer[] id) {
         ResultInfo resultInfo = new ResultInfo();
@@ -88,8 +87,7 @@ public class SmsDownController {
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public void export(@RequestParam(value = "id", required = true) Integer[] idArr,
                        HttpServletResponse response) {
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("multipart/form-data");
+        response.setContentType("application/force-download");
         response.addHeader("Content-Disposition", "attachment;fileName=" + System.currentTimeMillis() + ".csv");
         try (ServletOutputStream outputStream = response.getOutputStream()) {
             List<SmsDown> smsDownList = smsDownService.findAll(Arrays.asList(idArr));
@@ -100,6 +98,45 @@ public class SmsDownController {
         }
     }
 
+
+    @RequestMapping(value = "templet", method = RequestMethod.GET)
+    public void templet(HttpServletRequest request, HttpServletResponse response) {
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            String filePath = request.getServletContext().getRealPath(
+                    "templet" + File.separator + "smsdown.csv");
+            File file = new File(filePath);
+            if (!file.isFile()) {
+                return;
+            }
+            response.setContentType("application/force-download");
+            response.addHeader("Content-Disposition", "attachment;fileName=smsdown.csv");
+            in = new FileInputStream(file);
+            out = response.getOutputStream();
+            byte[] buff = new byte[in.available()];
+            in.read(buff);
+            out.write(buff);
+            out.flush();
+        } catch (Exception e) {
+            logger.error("下载模板错误");
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
     public ResultInfo csvImport(MultipartFile uploadFile) {

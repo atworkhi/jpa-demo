@@ -106,7 +106,7 @@
 
         });
         $("#download").click(function () {
-
+            location.href = "${ctx}/sms-down/templet";
         });
         $("#cancel").click(function () {
             $("#searchForm input").each(function () {
@@ -116,5 +116,42 @@
         $("#ok").click(function () {
             $("#SmsDownTable").bootstrapTable("refresh");
         });
+        $("#add").click(function () {
+            alert("我还没有实现");
+        });
+        $("#update").click(function () {
+            alert("我也没有实现");
+        });
+        $("#delete").click(function () {
+            var selectedRows = $("#SmsDownTable").bootstrapTable('getSelections');
+            if (selectedRows == null || selectedRows.length == 0) {
+                alert("请选择需要删除的记录");
+                return;
+            }
+            var idArr = new Array(selectedRows.length);
+            for (var i = 0; i < selectedRows.length; i++) {
+                idArr[i] = i;
+            }
+            $.ajax({
+                url: "${ctx}/sms-down/delete",
+                type: "post",
+                dataType: "json",
+                data: {
+                    id: idArr
+                },
+                success: function (data) {
+                    if (data.success) {
+                        alert(data.message);
+                        $("#SmsDownTable").bootstrapTable('refresh');
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("网络异常，稍后重试");
+                }
+            })
+        });
+
     });
 </script>
