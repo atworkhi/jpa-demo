@@ -47,29 +47,29 @@ public class SmsDownController {
 
     @RequestMapping(value = "list", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public BSTableEntity<SmsDown> list(
-            @RequestParam(value = "inTime", defaultValue = "", required = false) String inTime,
-            @RequestParam(value = "md5", defaultValue = "", required = false) String md5,
-            @RequestParam("limit") int limit,
-            @RequestParam("offset") int offset) {
-        BSTableEntity<SmsDown> entity = new BSTableEntity<>();
-        Pageable pageable = new PageRequest(offset / limit, limit);
-        SmsDown smsDown = new SmsDown().setInTime(inTime).setMd5(md5);
+    public List<SmsDown> list(
+            @RequestParam(value = "inTime", required = false) String inTime,
+            @RequestParam(value = "md5", required = false) String md5) {
+        SmsDown smsDown = new SmsDown();
+        if (inTime != null && inTime.length() > 0) {
+            smsDown.setInTime(inTime);
+        }
+        if (md5 != null && md5.length() > 0) {
+            smsDown.setMd5(md5);
+        }
         Example<SmsDown> example = Example.of(smsDown);
+        List<SmsDown> smsDownList = new ArrayList<>();
         try {
-//            Page<SmsDown> page = smsDownService.findAll(example);
-            List<SmsDown> smsDownList = smsDownService.findAll();
-            entity.setRows(smsDownList);
-            entity.setTotal(Long.valueOf(smsDownList.size()));
+            smsDownList = smsDownService.findAll(example);
         } catch (Exception e) {
             logger.error("查询SmsDown列表异常", e);
         }
-        return entity;
+        return smsDownList;
     }
 
     @RequestMapping(value = "delete", method = RequestMethod.GET)
     @ResponseBody
-    public ResultInfo delete(@RequestParam(value = "id",required = true) Integer[] id) {
+    public ResultInfo delete(@RequestParam(value = "id", required = true) Integer[] id) {
         ResultInfo resultInfo = new ResultInfo();
         try {
             List<SmsDown> smsDownList = smsDownService.findAll(Arrays.asList(id));
