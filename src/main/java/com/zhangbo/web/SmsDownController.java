@@ -66,23 +66,28 @@ public class SmsDownController {
         return smsDownList;
     }
 
+
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo delete(@RequestParam(value = "id", required = true) Integer[] id) {
+    public ResultInfo delete(@RequestParam(value = "id[]", required = true) Integer[] ids) {
         ResultInfo resultInfo = new ResultInfo();
         try {
-            List<SmsDown> smsDownList = smsDownService.findAll(Arrays.asList(id));
+            List<SmsDown> smsDownList = smsDownService.findAll(Arrays.asList(ids));
+            if (smsDownList == null || smsDownList.size() == 0) {
+                resultInfo.setMessage("参数有误");
+                resultInfo.setSuccess(false);
+                return resultInfo;
+            }
             smsDownService.delete(smsDownList);
             resultInfo.setMessage("删除成功");
             resultInfo.setSuccess(Boolean.TRUE);
         } catch (Exception e) {
             resultInfo.setMessage("删除失败");
             resultInfo.setSuccess(Boolean.FALSE);
-            logger.error("删除smsdown失败");
+            logger.error("删除smsdown失败",e);
         }
         return resultInfo;
     }
-
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public void export(@RequestParam(value = "id", required = true) Integer[] idArr,
@@ -139,7 +144,8 @@ public class SmsDownController {
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
-    public ResultInfo csvImport(MultipartFile uploadFile) {
+    public ResultInfo csvImport(
+            @RequestParam("uploadFile") MultipartFile uploadFile) {
         ResultInfo resultInfo = new ResultInfo();
         try (InputStream inputStream = uploadFile.getInputStream()) {
             List<String[]> list = CsvUtils.readCSV(inputStream);

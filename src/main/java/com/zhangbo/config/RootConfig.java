@@ -45,6 +45,9 @@ public class RootConfig {
         dataSource.setUrl(environment.getProperty("db.url"));
         dataSource.setUsername(environment.getProperty("db.username"));
         dataSource.setPassword(environment.getProperty("db.password"));
+        dataSource.setTestWhileIdle(true);
+        dataSource.setValidationQuery("select 1");
+        dataSource.setTimeBetweenEvictionRunsMillis(3600000);
         return dataSource;
     }
 
