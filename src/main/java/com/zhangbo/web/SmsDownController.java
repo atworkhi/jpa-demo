@@ -84,7 +84,7 @@ public class SmsDownController {
         } catch (Exception e) {
             resultInfo.setMessage("删除失败");
             resultInfo.setSuccess(Boolean.FALSE);
-            logger.error("删除smsdown失败",e);
+            logger.error("删除smsdown失败", e);
         }
         return resultInfo;
     }
@@ -144,11 +144,19 @@ public class SmsDownController {
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
-    public ResultInfo csvImport(
-            @RequestParam("uploadFile") MultipartFile uploadFile) {
+    @ResponseBody
+    public ResultInfo csvImport(@RequestParam("uploadFile") MultipartFile uploadFile) {
         ResultInfo resultInfo = new ResultInfo();
         try (InputStream inputStream = uploadFile.getInputStream()) {
             List<String[]> list = CsvUtils.readCSV(inputStream);
+            if (list.size() > 0) {
+                //比较模版头是否一直
+                if (compare(list.get(0), SmsDown.EXPORT_HEADERS)) {
+                    resultInfo.setSuccess(false);
+                    resultInfo.setMessage("当前数据与模版数据不一致");
+                    return resultInfo;
+                }
+            }
             if (list != null) {
                 List<SmsDown> smsDownList = parseCsv2SmsDown(list);
                 smsDownService.save(smsDownList);
@@ -211,14 +219,16 @@ public class SmsDownController {
     private static List<SmsDown> parseCsv2SmsDown(List<String[]> list) throws Exception {
         List<SmsDown> smsDownList = new ArrayList<>();
         String[] fields = SmsDown.EXPORT_HEADERS_FIELDS;
-        if (list == null && list.size() == 0) {
-            for (String[] line : list) {
+        //从第二行取数据
+        if (list != null && list.size() > 1) {
+            for (int a = 1; a < list.size(); a++) {
+                String[] line = list.get(a);
                 if (line == null || line.length == 0) {
                     continue;
                 }
                 SmsDown smsDown = new SmsDown();
                 Class clazz = smsDown.getClass();
-                for (int i = 1; i < fields.length; i++) {
+                for (int i = 0; i < line.length; i++) {
                     Field field = clazz.getDeclaredField(fields[i]);
                     field.setAccessible(true);
                     String type = field.getType().toString();
@@ -236,5 +246,20 @@ public class SmsDownController {
         return smsDownList;
     }
 
+
+    private boolean compare(String[] arr1, String[] arr2) {
+        if (arr1 == null || arr2 == null) {
+            return false;
+        }
+        if (arr1.length != arr2.length) {
+            return false;
+        }
+        for (int i = 0; i < arr1.length; i++) {
+            if (!arr1[i].equals(arr2)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

@@ -45,7 +45,7 @@
                 <form id="uploadForm" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="inputFile">选择文件</label>
-                        <input name="uploadFile" type="file" id="inputFile">
+                        <input id="inputFile" name="uploadFile" type="file">
                     </div>
                 </form>
             </div>
@@ -158,7 +158,6 @@
     });
     $("#delete").click(function () {
         var selectedRows = $("#SmsDownTable").bootstrapTable('getSelections');
-        console.log(selectedRows);
         if (selectedRows == null || selectedRows.length == 0) {
             alert("请选择需要删除的记录");
             return;
@@ -167,7 +166,6 @@
         for (var i = 0; i < selectedRows.length; i++) {
             idArr[i] = selectedRows[i].id;
         }
-        console.log(idArr);
         $.ajax({
             url: "${ctx}/sms-down/delete",
             type: "post",
@@ -189,23 +187,26 @@
             }
         })
     });
-
     $("#fileUploadBtn").click(function () {
-        $("#fileUploadBtn").disable();
+        var form = new FormData($("#uploadForm")[0]);
         $.ajax({
             url: "${ctx}/sms-down/import",
             type: "POST",
-            data: $('#uploadForm').serialize(),
+            data: form,
+            contentType: false,
+            processData: false,
             success: function (data) {
                 if (data.success) {
                     alert(data.message);
+                    $('#uploadForm')[0].reset();
+                    $("#myModal").modal("hide");
                     $("#SmsDownTable").bootstrapTable('refresh');
                 } else {
                     alert(data.message);
                 }
             },
-            error: function (data) {
-                $('#serverResponse').html(data.status + " : " + data.statusText + " : " + data.responseText);
+            error: function () {
+                alert("网络异常，稍后重试");
             }
         });
     })

@@ -1,10 +1,7 @@
 package com.zhangbo.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -18,8 +15,7 @@ public class SmsDown implements Serializable {
      * 导出csv表头
      */
     @Transient
-    public static final String[] EXPORT_HEADERS = {
-            "id", "研判时间", "病毒md5", "病毒名称", "病毒真实下载地址",
+    public static final String[] EXPORT_HEADERS = {"研判时间", "病毒md5", "病毒名称", "病毒真实下载地址",
             "病毒真实下载IP", "病毒真实下载归属地", "病毒真实下载运营商", "病毒原始下载地址",
             "病毒属性", "影响平台", "备注"};
 
@@ -27,12 +23,12 @@ public class SmsDown implements Serializable {
      * 导出csv表头对应的字段名
      */
     @Transient
-    public static final String[] EXPORT_HEADERS_FIELDS = {
-            "id", "inTime", "md5", "malewareName", "downloadUrl",
+    public static final String[] EXPORT_HEADERS_FIELDS = {"inTime", "md5", "malewareName", "downloadUrl",
             "downloadIp", "downloadLocal", "downloadForm", "oldDownload",
             "category", "platform", "description"};
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     private String inTime;

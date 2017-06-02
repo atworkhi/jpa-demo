@@ -22,11 +22,11 @@ public class CsvUtils {
      */
     public static List<String[]> readCSV(InputStream in) throws Exception {
         if (in == null) {
-            return new ArrayList<String[]>();
+            return new ArrayList();
         }
         List<String[]> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            reader.readLine();
+            //reader.readLine();
             String str;
             while ((str = reader.readLine()) != null) {
                 result.add(str.split(","));
