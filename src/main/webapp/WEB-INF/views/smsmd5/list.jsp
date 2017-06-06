@@ -102,9 +102,6 @@
             field: "platform",
             title: "影响平台"
         }, {
-            field: "details",
-            title: "病毒描述"
-        }, {
             field: "name",
             title: "安装名称"
         }, {
@@ -122,6 +119,9 @@
         }, {
             field: "emailPass",
             title: "邮箱密码"
+        }, {
+            field: "details",
+            title: "病毒描述"
         }]
     });
     $("#export").click(function () {
