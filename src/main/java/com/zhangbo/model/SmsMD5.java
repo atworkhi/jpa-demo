@@ -19,7 +19,8 @@ public class SmsMD5 {
      */
     @Transient
     public static final String[] EXPORT_HEADERS_FIELDS = {"inTime", "md5", "malewareName", "category",
-            "platform", "details", "name", "phoneNum", "phoneLocal", "phoneForm", "email", "emailPass"};
+            "platform", "details", "name", "phoneNum", "phoneLocal",
+            "phoneForm", "email", "emailPass"};
 
 
     @Id

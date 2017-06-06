@@ -11,16 +11,29 @@
             </button>
             <a class="navbar-brand" href="#">我的病毒库</a>
         </div>
-        <%--<div id="navbar" class="navbar-collapse collapse">--%>
-            <%--<ul class="nav navbar-nav navbar-right">--%>
-                <%--<li><a href="#">Dashboard</a></li>--%>
-                <%--<li><a href="#">Settings</a></li>--%>
-                <%--<li><a href="#">Profile</a></li>--%>
-                <%--<li><a href="#">Help</a></li>--%>
-            <%--</ul>--%>
-            <%--<form class="navbar-form navbar-right">--%>
-                <%--<input type="text" class="form-control" placeholder="Search...">--%>
-            <%--</form>--%>
-        <%--</div>--%>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul id="menu_ul" class="nav navbar-nav navbar-right">
+                <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-down/index')">SmsDown</a></li>
+                <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-md5/index')">SmsMD5</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
+<script>
+    function loadHtml(obj, url) {
+        $("#menu_ul li").removeClass("active");
+        $(obj).parent("li").addClass("active");
+        $.ajax({
+            url: url,
+            global: false,
+            dataType: "html",
+            async: false,
+            success: function (msg) {
+                $(".main").html(msg);
+            },
+            error: function (msg) {
+                alert("加载页面失败");
+            }
+        })
+    }
+</script>

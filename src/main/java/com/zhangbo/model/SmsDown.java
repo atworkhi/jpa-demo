@@ -1,12 +1,8 @@
 package com.zhangbo.model;
 
-
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by zhangbo on 2017/5/8.
- */
 @Entity
 @Table(name = "sms_down")
 public class SmsDown implements Serializable {

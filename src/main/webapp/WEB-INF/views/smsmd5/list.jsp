@@ -123,7 +123,7 @@
             field: "emailPass",
             title: "邮箱密码"
         }]
-    })
+    });
     $("#export").click(function () {
         var selectedRows = $("#SmsMD5Table").bootstrapTable('getSelections');
         if (selectedRows.length == 0) {

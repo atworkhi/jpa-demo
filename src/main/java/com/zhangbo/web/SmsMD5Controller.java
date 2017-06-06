@@ -24,10 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-/**
- * Created by zhangbo on 2017/5/9.
- */
 @Controller
 @RequestMapping("/sms-md5")
 public class SmsMD5Controller {
@@ -57,7 +53,7 @@ public class SmsMD5Controller {
 
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo delete(@RequestParam(value = "id[]", required = true) Integer[] ids) {
+    public ResultInfo delete(@RequestParam(value = "id[]") Integer[] ids) {
         ResultInfo resultInfo = new ResultInfo();
         try {
             List<SmsMD5> smsMD5List = smsMD5Service.findAll(Arrays.asList(ids));
@@ -77,8 +73,8 @@ public class SmsMD5Controller {
         return resultInfo;
     }
 
-    @RequestMapping(value = "export", method = RequestMethod.GET)
-    public void export(@RequestParam(value = "id", required = true) Integer[] idArr,
+    @RequestMapping(value = "export", method = RequestMethod.POST)
+    public void export(@RequestParam(value = "id") Integer[] idArr,
                        HttpServletResponse response) {
         response.setContentType("application/force-download");
         response.addHeader("Content-Disposition", "attachment;fileName=" + System.currentTimeMillis() + ".csv");
@@ -108,8 +104,7 @@ public class SmsMD5Controller {
             in = new FileInputStream(file);
             out = response.getOutputStream();
             byte[] buff = new byte[in.available()];
-            in.read(buff);
-            out.write(buff);
+            out.write(in.read(buff));
             out.flush();
         } catch (Exception e) {
             logger.error("下载模板错误");
@@ -145,12 +140,10 @@ public class SmsMD5Controller {
                     return resultInfo;
                 }
             }
-            if (list != null) {
-                List<SmsMD5> smsDownList = parseCsv2SmsMD5(list);
-                smsMD5Service.save(smsDownList);
-                resultInfo.setSuccess(Boolean.TRUE);
-                resultInfo.setMessage("导入成功");
-            }
+            List<SmsMD5> smsDownList = parseCsv2SmsMD5(list);
+            smsMD5Service.save(smsDownList);
+            resultInfo.setSuccess(Boolean.TRUE);
+            resultInfo.setMessage("导入成功");
         } catch (Exception e) {
             resultInfo.setSuccess(Boolean.FALSE);
             resultInfo.setMessage("导入失败");
@@ -170,14 +163,11 @@ public class SmsMD5Controller {
      * 将smsdown转换为csv
      *
      * @param smsMD5List
-     * @return
+     * @return csv数据
      * @throws Exception
      */
     private static List<String[]> parseSmsMD52Csv(List<SmsMD5> smsMD5List) throws Exception {
         List<String[]> resultList = new ArrayList<>();
-        if (smsMD5List == null) {
-            return resultList;
-        }
         for (SmsMD5 SmsMD5 : smsMD5List) {
             StringBuilder sb = new StringBuilder();
             Class clazz = SmsMD5.getClass();

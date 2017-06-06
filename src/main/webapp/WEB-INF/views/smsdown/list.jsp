@@ -1,4 +1,8 @@
 <%@page contentType="text/html; utf-8" pageEncoding="utf-8" %>
+<%--<ol class="breadcrumb">--%>
+    <%--<li><a href="${ctx}">首页</a></li>--%>
+    <%--<li class="active">SmsDown</li>--%>
+<%--</ol>--%>
 <div class="panel panel-default">
     <div class="panel-heading">查询</div>
     <div class="panel-body">
@@ -87,6 +91,8 @@
         pageList: [10, 50, 100, 500, "All"],//可供选择的每页的行数（*）
         maintainSelected: true,             //分页记住checkbox
         clickToSelect: true,                //是否启用点击选中行
+        //liveDrag:true,
+        resizable:true,
         columns: [{
             field: "status",
             checkbox: true

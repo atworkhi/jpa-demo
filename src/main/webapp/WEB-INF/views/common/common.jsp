@@ -18,3 +18,7 @@
 
 <!-- Latest compiled and minified Locales -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+
+<script src="${ctx}/assets/js/bootstrap-table-resizable.js"></script>
+
+<script src="${ctx}/assets/js/colResizable-1.5.min.js"></script>
