@@ -73,7 +73,7 @@ public class SmsMD5Controller {
         return resultInfo;
     }
 
-    @RequestMapping(value = "export", method = RequestMethod.POST)
+    @RequestMapping(value = "export", method = RequestMethod.GET)
     public void export(@RequestParam(value = "id") Integer[] idArr,
                        HttpServletResponse response) {
         response.setContentType("application/force-download");
@@ -104,7 +104,8 @@ public class SmsMD5Controller {
             in = new FileInputStream(file);
             out = response.getOutputStream();
             byte[] buff = new byte[in.available()];
-            out.write(in.read(buff));
+            in.read(buff);
+            out.write(buff);
             out.flush();
         } catch (Exception e) {
             logger.error("下载模板错误");
