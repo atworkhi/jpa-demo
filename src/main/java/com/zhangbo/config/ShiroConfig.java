@@ -9,10 +9,8 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Created by zhangbo on 2017/6/5.
  */
-@Configuration
 public class ShiroConfig {
 
-    @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
         bean.setSecurityManager(securityManager);
@@ -21,7 +19,6 @@ public class ShiroConfig {
         return bean;
     }
 
-    @Bean
     public DefaultWebSecurityManager securityManager() {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         manager.setRealm(new CustomerRealm());

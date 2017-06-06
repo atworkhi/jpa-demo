@@ -7,16 +7,12 @@
                 <span>病毒md5:</span>
                 <input id="md5" class="form-control w70"/>
             </div>
-            <div class="form-group">
-                <span>研判时间: </span>
-                <input id="inTime" class="form-control w70"/>
-            </div>
             <button id="ok" type="button" class="btn btn-success">查询</button>
             <button id="cancel" type="button" class="btn btn-warning">清空</button>
         </div>
     </div>
 </div>
-<div id="SmsDownTable"></div>
+<div id="SmsMD5Table"></div>
 <div id="toolbar">
     <div class="form-inline" role="form">
         <div class="btn-group">
@@ -58,13 +54,13 @@
 </div>
 
 <style>
-    #SmsDownTable td{
+    #SmsMD5Table td {
         white-space: nowrap;
     }
 </style>
 <script type="text/javascript">
-    $("#SmsDownTable").bootstrapTable({
-        url: "${ctx}/sms-down/list",        //请求后台的URL（*）
+    $("#SmsMD5Table").bootstrapTable({
+        url: "${ctx}/sms-md5/list",        //请求后台的URL（*）
         method: "get",                      //请求方式（*）
         toolbar: "#toolbar",                //工具按钮用哪个容器
         striped: true,                      //是否显示行间隔色
@@ -73,8 +69,7 @@
         sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
         queryParams: function () {          //查询参数
             var temp = {
-                md5: $.trim($("#md5").val()),
-                inTime: $.trim($("#inTime").val())
+                md5: $.trim($("#md5").val())
             }
             return temp;
         },
@@ -96,25 +91,10 @@
             sortable: true
         }, {
             field: "md5",
-            title: "md5"
+            title: "样本md5"
         }, {
             field: "malewareName",
-            title: "名称"
-        }, {
-            field: "downloadLocal",
-            title: "归属地"
-        }, {
-            field: "downloadUrl",
-            title: "真实下载地址"
-        }, {
-            field: "downloadIp",
-            title: "真实下载IP"
-        }, {
-            field: "downloadForm",
-            title: "运营商"
-        }, {
-            field: "oldDownload",
-            title: "原始下载地址"
+            title: "病毒名称"
         }, {
             field: "category",
             title: "病毒属性"
@@ -122,13 +102,30 @@
             field: "platform",
             title: "影响平台"
         }, {
-            field: "description",
-            title: "备注"
+            field: "details",
+            title: "病毒描述"
+        }, {
+            field: "name",
+            title: "安装名称"
+        }, {
+            field: "phoneNum",
+            title: "恶意主控号码"
+        }, {
+            field: "phoneLocal",
+            title: "恶意主控号码归属地"
+        }, {
+            field: "phoneForm",
+            title: "恶意主控号码运营商"
+        }, {
+            field: "email",
+            title: "恶意邮箱"
+        }, {
+            field: "emailPass",
+            title: "邮箱密码"
         }]
     })
     $("#export").click(function () {
-        var selectedRows = $("#SmsDownTable").bootstrapTable('getSelections');
-        console.log(selectedRows);
+        var selectedRows = $("#SmsMD5Table").bootstrapTable('getSelections');
         if (selectedRows.length == 0) {
             alert("请选中需要导出的数据！");
             return;
@@ -137,13 +134,13 @@
         for (var i = 0; i < selectedRows.length; i++) {
             idArr[i] = selectedRows[i].id;
         }
-        location.href = "${ctx}/sms-down/export?id=" + idArr;
+        location.href = "${ctx}/sms-md5/export?id=" + idArr;
     });
     $("#import").click(function () {
 
     });
     $("#download").click(function () {
-        location.href = "${ctx}/sms-down/templet";
+        location.href = "${ctx}/sms-md5/templet";
     });
     $("#cancel").click(function () {
         $("#searchForm input").each(function () {
@@ -151,7 +148,7 @@
         })
     });
     $("#ok").click(function () {
-        $("#SmsDownTable").bootstrapTable("refresh");
+        $("#SmsMD5Table").bootstrapTable("refresh");
     });
     $("#add").click(function () {
         alert("我还没有实现");
@@ -160,7 +157,7 @@
         alert("我也没有实现");
     });
     $("#delete").click(function () {
-        var selectedRows = $("#SmsDownTable").bootstrapTable('getSelections');
+        var selectedRows = $("#SmsMD5Table").bootstrapTable('getSelections');
         if (selectedRows == null || selectedRows.length == 0) {
             alert("请选择需要删除的记录");
             return;
@@ -170,7 +167,7 @@
             idArr[i] = selectedRows[i].id;
         }
         $.ajax({
-            url: "${ctx}/sms-down/delete",
+            url: "${ctx}/sms-md5/delete",
             type: "post",
             dataType: "json",
             data: {
@@ -179,8 +176,7 @@
             success: function (data) {
                 if (data.success) {
                     alert(data.message);
-                    $("#SmsDownTable").bootstrapTable('remove',
-                            {field: 'id', values: idArr});
+                    $("#SmsMD5Table").bootstrapTable('remove', {field: 'id', values: idArr});
                 } else {
                     alert(data.message);
                 }
@@ -193,7 +189,7 @@
     $("#fileUploadBtn").click(function () {
         var form = new FormData($("#uploadForm")[0]);
         $.ajax({
-            url: "${ctx}/sms-down/import",
+            url: "${ctx}/sms-md5/import",
             type: "POST",
             data: form,
             contentType: false,
@@ -203,7 +199,7 @@
                     alert(data.message);
                     $('#uploadForm')[0].reset();
                     $("#myModal").modal("hide");
-                    $("#SmsDownTable").bootstrapTable('refresh');
+                    $("#SmsMD5Table").bootstrapTable('refresh');
                 } else {
                     alert(data.message);
                 }

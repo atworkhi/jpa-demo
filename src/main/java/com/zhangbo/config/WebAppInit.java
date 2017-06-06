@@ -25,9 +25,9 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
         return new String[]{"/"};
     }
 
-    @Override
+   /* @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         servletContext.addFilter("ShiroFilter", new ShiroFilter());
         super.onStartup(servletContext);
-    }
+    }*/
 }

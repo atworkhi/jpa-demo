@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 /**
  * Created by zhangbo on 2017/6/5.
  */
-public interface UserService extends BaseService<User, Integer> {
+public interface UserService {
 
     User findUserByUserName(String username) throws Exception;
 }

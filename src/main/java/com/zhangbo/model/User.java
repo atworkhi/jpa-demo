@@ -10,7 +10,6 @@ import java.util.Date;
  * Created by zhangbo on 2017/6/5.
  */
 
-@Entity
 public class User implements Serializable {
 
     private Integer id;

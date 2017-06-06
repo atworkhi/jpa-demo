@@ -20,12 +20,10 @@ import java.util.Set;
 /**
  * Created by zhangbo on 2017/6/5.
  */
-@Component
 public class CustomerRealm extends AuthorizingRealm {
 
     private static final Logger loger = LoggerFactory.getLogger(CustomerRealm.class);
 
-    @Autowired
     private UserService userService;
 
 

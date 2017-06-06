@@ -1,14 +1,29 @@
 package com.zhangbo.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "sms_md5")
 public class SmsMD5 {
 
+    /**
+     * 导出csv表头
+     */
+    @Transient
+    public static final String[] EXPORT_HEADERS = {"研判时间", "样本MD5", "病毒名称", "病毒属性",
+            "影响平台", "病毒描述", "安装名称", "恶意主控号码", "恶意主控号码归属地",
+            "恶意主控号码运营商", "恶意邮箱", "邮箱密码"};
+
+    /**
+     * 导出csv表头对应的字段名
+     */
+    @Transient
+    public static final String[] EXPORT_HEADERS_FIELDS = {"inTime", "md5", "malewareName", "category",
+            "platform", "details", "name", "phoneNum", "phoneLocal", "phoneForm", "email", "emailPass"};
+
+
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String inTime;
     private String md5;

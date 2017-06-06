@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 /**
  * Created by zhangbo on 2017/6/5.
  */
-@Service
 public class UserServiceImpl extends BaseServiceImpl<User, Integer> implements UserService {
 
-    @Autowired
     private UserDao userDao;
 
     @Override
