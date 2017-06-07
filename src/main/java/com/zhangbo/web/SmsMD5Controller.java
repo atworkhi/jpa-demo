@@ -2,6 +2,7 @@ package com.zhangbo.web;
 
 import com.zhangbo.model.ResultInfo;
 import com.zhangbo.model.SmsMD5;
+import com.zhangbo.model.SmsMD5File;
 import com.zhangbo.service.SmsMD5Service;
 import com.zhangbo.utils.CsvUtils;
 import org.apache.log4j.Logger;
@@ -50,6 +51,29 @@ public class SmsMD5Controller {
         return smsDownList;
     }
 
+    @RequestMapping(value = "fileList", method = RequestMethod.GET)
+    @ResponseBody
+    public List<SmsMD5File> fileList(HttpServletRequest request) {
+        List<SmsMD5File> fileNameList = new ArrayList<>();
+        String realPath = request.getServletContext().getRealPath("upload");
+        try {
+            File file = new File(realPath);
+            if (file.exists() && file.isDirectory()) {
+                File[] files = file.listFiles();
+                for (int i = 0; i < files.length; i++) {
+                    File f = files[i];
+                    if (!f.isDirectory()) {
+                        SmsMD5File smsMD5File = new SmsMD5File(
+                                i + 1, f.getName());
+                        fileNameList.add(smsMD5File);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("查询SmsMD5文件列表异常", e);
+        }
+        return fileNameList;
+    }
 
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     @ResponseBody
@@ -157,6 +181,11 @@ public class SmsMD5Controller {
     @RequestMapping("/index")
     public String index() {
         return "smsmd5/list";
+    }
+
+    @RequestMapping("/file")
+    public String file() {
+        return "smsmd5/file";
     }
 
 
