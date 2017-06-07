@@ -37,10 +37,35 @@
             title: "操作",
             align: "center",
             formatter: function (value, row, index) {
-                var link = "<a href='${ctx}/sms-md5/fileDown?fileName=" + row.fileName + "'>"
-                        + "<span class='glyphicon glyphicon-download-alt' aria-hidden='true'></span></a>"
-                return link;
+                var down = "<a href='${ctx}/download/upload/" + row.fileName + "'>"
+                        + "<span class='glyphicon glyphicon-download-alt' aria-hidden='true'></span></a>";
+                var del = "<a href='javascript:void(0)' onclick='deleteFile(\"" + row.fileName + "\")'>"
+                        + "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>"
+                return down + "&nbsp;&nbsp;&nbsp;&nbsp;" + del;
             }
         }]
     });
+
+
+    function deleteFile(fileName) {
+        if (confirm("确认删除文件：" + fileName + "?")) {
+            $.ajax({
+                url: "${ctx}/delete/upload/" + fileName,
+                dataType: "json",
+                type: "get",
+                success: function (data) {
+                    if (data.success) {
+                        alert(data.message);
+                        $("#table").bootstrapTable("refresh");
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("删除失败");
+                }
+            })
+        }
+        return false;
+    }
 </script>

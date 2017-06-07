@@ -27,7 +27,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/sms-md5")
-public class SmsMD5Controller {
+public class SmsMD5Controller extends BaseController {
 
     private static Logger logger = Logger.getLogger(SmsMD5Controller.class);
 
