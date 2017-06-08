@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 
 /**
  * Created by zhangbo on 2017/6/7.
@@ -26,7 +27,7 @@ public class BaseController {
     public void fileDownLoad(
             HttpServletRequest request, HttpServletResponse response,
             @PathVariable("filePath") String filePath,
-            @PathVariable("fileName") String fileName) {
+            @PathVariable("fileName") String fileName) throws UnsupportedEncodingException {
 
         String realPath = request.getServletContext().getRealPath(filePath);
         File file = new File(realPath + File.separator + fileName);
@@ -34,12 +35,10 @@ public class BaseController {
             logger.info("下载文件不存在");
             return;
         }
+        response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
-        try {
-            response.addHeader("Content-Disposition", "attachment;fileName=" + new String(fileName.getBytes("utf-8")));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        response.addHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, "UTF-8"));
+
         try (InputStream inputStream = new FileInputStream(file);
              OutputStream outputStream = response.getOutputStream()) {
 

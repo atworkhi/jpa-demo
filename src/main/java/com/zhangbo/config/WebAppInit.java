@@ -2,8 +2,10 @@ package com.zhangbo.config;
 
 
 import org.apache.shiro.web.servlet.ShiroFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -25,9 +27,11 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
         return new String[]{"/"};
     }
 
-   /* @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        servletContext.addFilter("ShiroFilter", new ShiroFilter());
-        super.onStartup(servletContext);
-    }*/
+    @Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
+        encodingFilter.setEncoding("utf-8");
+        encodingFilter.setForceEncoding(true);
+        return new Filter[]{encodingFilter};
+    }
 }
