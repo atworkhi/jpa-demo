@@ -4,10 +4,9 @@ import com.zhangbo.model.ResultInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +35,11 @@ public class BaseController {
             return;
         }
         response.setContentType("application/force-download");
-        response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        try {
+            response.addHeader("Content-Disposition", "attachment;fileName=" + new String(fileName.getBytes("utf-8")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         try (InputStream inputStream = new FileInputStream(file);
              OutputStream outputStream = response.getOutputStream()) {
 
@@ -52,6 +55,47 @@ public class BaseController {
             e.printStackTrace();
             logger.error("下载文件异常", e);
         }
+
+    }
+
+
+    @RequestMapping(value = "upload", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo upload(
+            @RequestParam("file") MultipartFile[] files,
+            HttpServletRequest request) {
+        ResultInfo resultInfo = new ResultInfo();
+        if (files == null || files.length == 0) {
+            resultInfo.setSuccess(Boolean.FALSE);
+            resultInfo.setMessage("上传文件有误");
+            return resultInfo;
+        }
+        String realPath = request.getServletContext().getRealPath("upload");
+        String msg = "";
+        for (MultipartFile file : files) {
+            File f = new File(realPath + File.separator + file.getOriginalFilename());
+            if (!f.exists()) {
+                f.mkdirs();
+                try {
+                    file.transferTo(f);
+                } catch (IOException e) {
+                    logger.error("上传文件失败");
+                    resultInfo.setMessage("上传失败");
+                    resultInfo.setSuccess(false);
+                    return resultInfo;
+                }
+            } else {
+                msg += file.getOriginalFilename() + "已存在<br/>";
+            }
+        }
+        if (StringUtils.isEmpty(msg)) {
+            resultInfo.setMessage("上传成功");
+            resultInfo.setSuccess(true);
+        } else {
+            resultInfo.setSuccess(false);
+            resultInfo.setMessage("上传失败");
+        }
+        return resultInfo;
 
     }
 
@@ -81,7 +125,6 @@ public class BaseController {
             resultInfo.setMessage("删除文件异常");
             logger.error("文件删除失败", e);
         }
-
         return resultInfo;
 
     }
