@@ -3,16 +3,14 @@ package com.zhangbo.web;
 import com.zhangbo.model.ResultInfo;
 import com.zhangbo.model.SmsMD5;
 import com.zhangbo.model.SmsMD5File;
+import com.zhangbo.model.SmsMD5Top;
 import com.zhangbo.service.SmsMD5Service;
 import com.zhangbo.utils.CsvUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -175,6 +173,13 @@ public class SmsMD5Controller extends BaseController {
             logger.error("导入smsdown失败", e);
         }
         return resultInfo;
+    }
+
+
+    @RequestMapping("/top/{order}")
+    public List<SmsMD5Top> top(
+            @PathVariable("order") String order) {
+        return null;
     }
 
 
