@@ -8,13 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Created by zhangbo on 2017/5/8.
- */
 @Repository
 public interface SmsMD5Dao extends BaseRepository<SmsMD5, Integer> {
 
-    @Query(value = "select s.id from SmsMD5 s",nativeQuery = true)
-    List<SmsMD5Top> findTopSmsMD5(@Param("field") String field);
+    @Query(value = "select new com.zhangbo.model.SmsMD5Top(:field,count(field)) from SmsMD5  group by :field ")
+    List<SmsMD5Top> findMD5Top(@Param("field") String field);
 
 }

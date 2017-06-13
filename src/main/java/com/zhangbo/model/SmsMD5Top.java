@@ -5,7 +5,7 @@ public class SmsMD5Top {
 
     private Integer id;
     private String md5;
-    private Integer count;
+    private long count;
 
     public Integer getId() {
         return id;
@@ -14,11 +14,10 @@ public class SmsMD5Top {
     public SmsMD5Top() {
     }
 
-    public SmsMD5Top(String md5, Integer count) {
+    public SmsMD5Top(String md5, long count) {
         this.md5 = md5;
         this.count = count;
     }
-
 
     public SmsMD5Top setId(Integer id) {
         this.id = id;
@@ -34,11 +33,11 @@ public class SmsMD5Top {
         return this;
     }
 
-    public Integer getCount() {
+    public long getCount() {
         return count;
     }
 
-    public SmsMD5Top setCount(Integer count) {
+    public SmsMD5Top setCount(long count) {
         this.count = count;
         return this;
     }

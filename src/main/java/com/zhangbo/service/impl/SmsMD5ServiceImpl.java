@@ -20,6 +20,6 @@ public class SmsMD5ServiceImpl extends BaseServiceImpl<SmsMD5, Integer> implemen
 
     @Override
     public List<SmsMD5Top> findTopSmsMD5(String field) {
-        return smsMD5Dao.findTopSmsMD5(field);
+        return smsMD5Dao.findMD5Top(field);
     }
 }
