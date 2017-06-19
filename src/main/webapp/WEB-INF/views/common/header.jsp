@@ -16,6 +16,7 @@
                 <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-down/index')">SmsDown</a></li>
                 <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-md5/index')">SmsMD5</a></li>
                 <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-md5/file')">文件管理</a></li>
+                <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-md5/top')">排行榜</a></li>
             </ul>
         </div>
     </div>

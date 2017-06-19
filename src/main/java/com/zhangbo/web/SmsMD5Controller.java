@@ -201,6 +201,11 @@ public class SmsMD5Controller extends BaseController {
         return "smsmd5/file";
     }
 
+    @RequestMapping("/top")
+    public String top() {
+        return "smsmd5/top";
+    }
+
 
     /**
      * 将smsdown转换为csv
