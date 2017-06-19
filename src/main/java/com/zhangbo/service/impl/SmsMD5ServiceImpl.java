@@ -19,7 +19,12 @@ public class SmsMD5ServiceImpl extends BaseServiceImpl<SmsMD5, Integer> implemen
     private SmsMD5Dao smsMD5Dao;
 
     @Override
-    public List<SmsMD5Top> findTopSmsMD5(String field) {
-        return smsMD5Dao.findMD5Top(field);
+    public List<SmsMD5Top> findTopByMD5() {
+        return smsMD5Dao.findMD5Top();
+    }
+
+    @Override
+    public List<SmsMD5Top> findTopByPhoneNum() {
+        return smsMD5Dao.findPhoneNumTop();
     }
 }

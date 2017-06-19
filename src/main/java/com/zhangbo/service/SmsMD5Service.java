@@ -9,7 +9,9 @@ import java.util.List;
 public interface SmsMD5Service extends BaseService<SmsMD5, Integer> {
 
 
-    List<SmsMD5Top> findTopSmsMD5(String field);
+    List<SmsMD5Top> findTopByMD5();
+
+    List<SmsMD5Top> findTopByPhoneNum();
 
 
 }

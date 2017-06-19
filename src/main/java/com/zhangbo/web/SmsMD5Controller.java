@@ -29,7 +29,7 @@ public class SmsMD5Controller extends BaseController {
 
     private static Logger logger = Logger.getLogger(SmsMD5Controller.class);
 
-    private static final String[] GROUP_FIELDS = {"md5", "phoneNum",};
+    private static final String[] GROUP_FIELDS = {"md5", "phoneNum"};
 
     @Autowired
     private SmsMD5Service smsMD5Service;
@@ -180,13 +180,14 @@ public class SmsMD5Controller extends BaseController {
 
     @RequestMapping("/top/{order}")
     @ResponseBody
-    public List<SmsMD5Top> top(
-            @PathVariable("order") String order) {
+    public List<SmsMD5Top> top(@PathVariable("order") String order) {
         List<SmsMD5Top> smsMD5TopList = new ArrayList<>();
-        if (!Arrays.asList(GROUP_FIELDS).contains(order)) {
-            return smsMD5TopList;
+        if ("md5".equals(order)) {
+            smsMD5TopList = smsMD5Service.findTopByMD5();
+        } else if ("phoneNum".equals(order)) {
+            smsMD5TopList = smsMD5Service.findTopByPhoneNum();
         }
-        return smsMD5Service.findTopSmsMD5(order);
+        return smsMD5TopList;
     }
 
 
