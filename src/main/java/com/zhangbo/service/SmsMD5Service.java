@@ -13,5 +13,6 @@ public interface SmsMD5Service extends BaseService<SmsMD5, Integer> {
 
     List<SmsMD5Top> findTopByPhoneNum();
 
+    List<SmsMD5Top> findTopByIp();
 
 }

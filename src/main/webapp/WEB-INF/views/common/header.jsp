@@ -9,14 +9,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">我的病毒库</a>
+            <a class="navbar-brand" href="#">中国移动垃圾短信病毒病毒库</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul id="menu_ul" class="nav navbar-nav navbar-right">
-                <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-down/index')">SmsDown</a></li>
-                <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-md5/index')">SmsMD5</a></li>
-                <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-md5/file')">文件管理</a></li>
-                <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-md5/top')">排行榜</a></li>
+                <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-md5/index')">样本MD5特征库</a></li>
+                <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-down/index')">样本下载地址特征库</a></li>
+                <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-md5/file')">样本文件管理库</a></li>
+                <li><a href="#" onclick="loadHtml(this,'${ctx}/sms-md5/top')">样本分析报表Top-Ten</a></li>
             </ul>
         </div>
     </div>
