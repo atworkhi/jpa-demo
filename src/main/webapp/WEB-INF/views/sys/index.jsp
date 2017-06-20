@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard Template for Bootstrap</title>
+    <title>中国移动垃圾短信信息库</title>
     <jsp:include page="/WEB-INF/views/common/common.jsp"/>
 </head>
 <body>
@@ -13,7 +13,9 @@
 <div class="container-fluid">
     <div class="row">
         <%--<jsp:include page="/WEB-INF/views/common/left.jsp"/>--%>
-        <div class="col-md-12 main"></div>
+        <div class="col-md-12 main">
+            <jsp:include page="/WEB-INF/views/common/content.jsp"></jsp:include>
+        </div>
     </div>
 </div>
 </body>

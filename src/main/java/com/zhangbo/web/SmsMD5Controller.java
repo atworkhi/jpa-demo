@@ -186,6 +186,8 @@ public class SmsMD5Controller extends BaseController {
             smsMD5TopList = smsMD5Service.findTopByMD5();
         } else if ("phoneNum".equals(order)) {
             smsMD5TopList = smsMD5Service.findTopByPhoneNum();
+        } else if ("ip".equals(order)) {
+            smsMD5TopList = smsMD5Service.findTopByIp();
         }
         return smsMD5TopList;
     }
