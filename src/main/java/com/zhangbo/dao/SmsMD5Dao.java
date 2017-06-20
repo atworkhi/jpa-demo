@@ -15,7 +15,7 @@ public interface SmsMD5Dao extends BaseRepository<SmsMD5, Integer> {
      *
      * @return
      */
-    @Query(value = "select new com.zhangbo.model.SmsMD5Top(s.md5,count(s.md5)) from SmsMD5 as s where s.md5 is not null group by s.md5 order by count(s.md5) desc")
+    @Query(value = "select new com.zhangbo.model.SmsMD5Top(s.md5,count(s.md5)) from SmsMD5 as s where s.md5 is not null and s.md5 <> '' group by s.md5 order by count(s.md5) desc")
     List<SmsMD5Top> findMD5Top();
 
     /**
@@ -23,14 +23,14 @@ public interface SmsMD5Dao extends BaseRepository<SmsMD5, Integer> {
      *
      * @return
      */
-    @Query(value = "select new com.zhangbo.model.SmsMD5Top(s.phoneNum,count(s.phoneNum)) from SmsMD5 as s where s.phoneNum is not null group by s.phoneNum order by count(s.phoneNum) desc ")
+    @Query(value = "select new com.zhangbo.model.SmsMD5Top(s.phoneNum,count(s.phoneNum)) from SmsMD5 as s where s.phoneNum is not null and s.phoneNum <> '' group by s.phoneNum order by count(s.phoneNum) desc ")
     List<SmsMD5Top> findPhoneNumTop();
 
     /**
      * ip 排行
      * @return
      */
-    @Query(value = "select new com.zhangbo.model.SmsMD5Top(s.downloadIp,count(s.downloadIp)) from SmsDown as s where s.downloadIp is not null group by s.downloadIp order by count(s.downloadIp) desc ")
+    @Query(value = "select new com.zhangbo.model.SmsMD5Top(s.downloadIp,count(s.downloadIp)) from SmsDown as s where s.downloadIp is not null and s.downloadIp <> '' group by s.downloadIp order by count(s.downloadIp) desc ")
     List<SmsMD5Top> findIpTop();
 
 
