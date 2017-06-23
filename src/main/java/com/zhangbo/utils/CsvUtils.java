@@ -28,8 +28,9 @@ public class CsvUtils {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             //reader.readLine();
             String str;
+            String csvSplitBy = ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
             while ((str = reader.readLine()) != null) {
-                result.add(str.split(","));
+                result.add(str.split(csvSplitBy));
             }
         } catch (Exception e) {
             logger.error("读取csv文件异常");
