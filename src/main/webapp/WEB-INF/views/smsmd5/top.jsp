@@ -8,6 +8,8 @@
             <button id="md5Sort" onclick="sortTable(this,0)" class="btn btn-success">MD5-TOP</button>
             <button id="phoneSort" onclick="sortTable(this,1)" class="btn btn-default">手机号-TOP</button>
             <button id="ipSort" onclick="sortTable(this,2)" class="btn btn-default">真实下载IP-TOP</button>
+            <button id="domainSort" onclick="sortTable(this,3)" class="btn btn-default">域名-TOP</button>
+            <button id="emailSort" onclick="sortTable(this,4)" class="btn btn-default">邮箱-TOP</button>
         </div>
     </div>
 </div>
@@ -53,14 +55,18 @@
     });
 
     function sortTable(btn, sort) {
-        var sortField = ["md5", "phoneNum", "ip"];
+        var sortField = ["md5", "phoneNum", "ip","domain","email"];
         var newUrl = "${ctx}/sms-md5/top/";
         if (sort == 0) {
-            newUrl += sortField[0];
+            newUrl += sortField[sort];
         } else if (sort == 1) {
-            newUrl += sortField[1];
+            newUrl += sortField[sort];
         } else if (sort == 2) {
-            newUrl += sortField[2];
+            newUrl += sortField[sort];
+        } else if (sort == 3) {
+            newUrl += sortField[sort];
+        } else if (sort == 4) {
+            newUrl += sortField[sort];
         }
         $(".btn-group button").removeClass("btn-success").addClass("btn-default");
         $(btn).addClass("btn-success");

@@ -7,6 +7,18 @@
                 <span>病毒md5:</span>
                 <input id="md5" class="form-control w70"/>
             </div>
+            <div class="form-group">
+                <span>研判时间:</span>
+                <input id="inTime" class="form-control w70"/>
+            </div>
+            <div class="form-group">
+                <span>主控号码:</span>
+                <input id="phone" class="form-control w70"/>
+            </div>
+            <div class="form-group">
+                <span>邮箱:</span>
+                <input id="mail" class="form-control w70"/>
+            </div>
             <button id="ok" type="button" class="btn btn-success">查询</button>
             <button id="cancel" type="button" class="btn btn-warning">清空</button>
         </div>
@@ -69,7 +81,10 @@
         sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
         queryParams: function () {          //查询参数
             var temp = {
-                md5: $.trim($("#md5").val())
+                md5: $.trim($("#md5").val()),
+                phone: $.trim($("#phone").val()),
+                mail: $.trim($("#mail").val()),
+                inTime: $.trim($("#inTime").val())
             }
             return temp;
         },
@@ -112,7 +127,7 @@
             title: "恶意主控号码归属地"
         }, {
             field: "phoneForm",
-            title: "恶意主控号码运营商"
+            title: "域名"
         }, {
             field: "email",
             title: "恶意邮箱"
