@@ -4,12 +4,14 @@ import com.zhangbo.model.ResultInfo;
 import com.zhangbo.model.SmsMD5;
 import com.zhangbo.model.SmsMD5File;
 import com.zhangbo.model.SmsMD5Top;
+import com.zhangbo.service.SmsDownService;
 import com.zhangbo.service.SmsMD5Service;
 import com.zhangbo.utils.CsvUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,12 +36,28 @@ public class SmsMD5Controller extends BaseController {
     @Autowired
     private SmsMD5Service smsMD5Service;
 
+    @Autowired
+    private SmsDownService smsDownService;
+
     @RequestMapping(value = "list", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public List<SmsMD5> list(@RequestParam(value = "md5", required = false) String md5) {
+    public List<SmsMD5> list(
+            @RequestParam(value = "md5", required = false) String md5,
+            @RequestParam(value = "inTime", required = false) String inTime,
+            @RequestParam(value = "phone", required = false) String phone,
+            @RequestParam(value = "mail", required = false) String mail) {
         SmsMD5 smsMD5 = new SmsMD5();
-        if (md5 != null && md5.length() > 0) {
+        if (!StringUtils.isEmpty(md5)) {
             smsMD5.setMd5(md5);
+        }
+        if (!StringUtils.isEmpty(inTime)) {
+            smsMD5.setInTime(inTime);
+        }
+        if (!StringUtils.isEmpty(phone)) {
+            smsMD5.setPhoneNum(phone);
+        }
+        if (!StringUtils.isEmpty(mail)) {
+            smsMD5.setEmail(mail);
         }
         Example<SmsMD5> example = Example.of(smsMD5);
         List<SmsMD5> smsDownList = new ArrayList<>();
@@ -187,7 +205,11 @@ public class SmsMD5Controller extends BaseController {
         } else if ("phoneNum".equals(order)) {
             smsMD5TopList = smsMD5Service.findTopByPhoneNum();
         } else if ("ip".equals(order)) {
-            smsMD5TopList = smsMD5Service.findTopByIp();
+            smsMD5TopList = smsDownService.findTopByIp();
+        } else if("domain".equals(order)){
+            smsMD5TopList = smsDownService.findTopByDomain();
+        } else if("mail".equals(order)){
+            smsMD5TopList = smsMD5Service.findTopByEmail();
         }
         return smsMD5TopList;
     }

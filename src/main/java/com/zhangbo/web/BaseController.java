@@ -105,9 +105,7 @@ public class BaseController {
             @PathVariable("filePath") String filePath,
             @PathVariable("fileName") String fileName,
             HttpServletRequest request) {
-
         ResultInfo resultInfo = new ResultInfo();
-
         String realPath = request.getServletContext().getRealPath(filePath);
         File file = new File(realPath + File.separator + fileName);
         if (!file.exists() || file.isDirectory()) {

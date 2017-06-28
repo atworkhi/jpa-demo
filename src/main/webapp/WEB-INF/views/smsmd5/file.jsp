@@ -90,7 +90,7 @@
                     }
                 },
                 error: function () {
-                    alert("删除失败");
+                    alert("系统异常，删除失败");
                 }
             })
         }
